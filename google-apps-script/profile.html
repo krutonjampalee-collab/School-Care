@@ -1,0 +1,102 @@
+<!-- Teacher Profile & Account Security (profile.html) -->
+<div class="authorized-area d-none mt-1">
+  <div class="row g-4">
+    <!-- User Bio Card -->
+    <div class="col-md-4">
+      <div class="glass-card p-4 text-center">
+        <img id="prof-disp-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle mb-3" width="100" height="100" style="object-fit:cover;">
+        <h5 class="fw-bold mb-1" id="prof-disp-name">Loading...</h5>
+        <span class="badge bg-primary mb-3" id="prof-disp-role">Loading...</span>
+        
+        <div class="border-top pt-3 text-start text-sm text-secondary small">
+          <p class="mb-2"><i class="fa-solid fa-briefcase me-2"></i><strong>ตำแหน่ง:</strong> <span id="prof-disp-position">-</span></p>
+          <p class="mb-2"><i class="fa-solid fa-envelope me-2"></i><strong>อีเมลสถาบัน:</strong> <span id="prof-disp-email">-</span></p>
+          <p class="mb-0"><i class="fa-solid fa-phone me-2"></i><strong>เบอร์โทรศัพท์:</strong> <span id="prof-disp-phone">-</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Updates Tab -->
+    <div class="col-md-8">
+      <div class="glass-card p-4">
+        <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa-solid fa-user-shield me-2 text-primary"></i>รายละเอียดผู้เข้าใช้งานระบบและเปลี่ยนรหัสผ่าน</h5>
+        <form id="form-profile-update">
+          <div class="row g-3">
+             <div class="col-md-6">
+                <label class="form-label text-secondary small fw-semibold">ชื่อเข้าระบบ (Username)</label>
+                <input type="text" class="form-control bg-light" id="prof-username" readonly>
+             </div>
+             <div class="col-md-6">
+                <label class="form-label text-secondary small fw-semibold">อีเมลติดต่อฝ่ายปกครอง (Email)</label>
+                <input type="email" class="form-control" id="prof-email" required>
+             </div>
+
+             <div class="col-md-6">
+                <label class="form-label text-secondary small fw-semibold">รหัสผ่านสำหรับป้อนใหม่ (ต้องการเปลี่ยนพาสเวิร์ด)</label>
+                <input type="password" class="form-control" id="prof-pass" placeholder="เว้นว่างไว้หากไม่ต้องการเปลี่ยนแปลง">
+             </div>
+             <div class="col-md-6">
+                <label class="form-label text-secondary small fw-semibold">ยืนยันรหัสผ่านใหม่อีกครั้ง</label>
+                <input type="password" class="form-control" id="prof-pass-confirm" placeholder="เว้นว่างไว้หากไม่ต้องการเปลี่ยนแปลง">
+             </div>
+
+             <div class="col-12 text-end mt-4">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up me-2"></i> อัปเดตข้อมูลบัญชีผู้ใช้</button>
+             </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(window).on('hashchange', function() {
+    if (window.location.hash === "#profile" && currentUser) {
+      $("#prof-disp-avatar").attr("src", currentUser.profileImage || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png");
+      $("#prof-disp-name").text(currentUser.fullName);
+      $("#prof-disp-role").text(currentUser.role === 'Admin' ? 'แอดมินบริหารงาน' : 'อาจารย์ที่ปรึกษา');
+      $("#prof-disp-position").text(currentUser.position || "-");
+      $("#prof-disp-email").text(currentUser.email);
+      $("#prof-disp-phone").text(currentUser.phone || "-");
+      
+      $("#prof-username").val(currentUser.email.split("@")[0]);
+      $("#prof-email").val(currentUser.email);
+    }
+  });
+
+  $(document).ready(function() {
+    $("#form-profile-update").on("submit", async function(e) {
+       e.preventDefault();
+       let p1 = $("#prof-pass").val();
+       let p2 = $("#prof-pass-confirm").val();
+       if(p1 !== "" && p1 !== p2) {
+          Swal.fire("ยืนยันรหัสไม่ถูกต้อง", "กรุณากรอกรหัสผ่านใหม่ให้ตรงกันทั้งสองแถว", "warning");
+          return;
+       }
+
+       let payload = {
+          Email: $("#prof-email").val(),
+          FullName: currentUser.fullName,
+       };
+       if(p1 !== "") {
+          payload.Password = p1;
+       }
+
+       $("#loading-screen").fadeIn(200);
+       try {
+          let res = await runBackend("updateSheetRow", SHEETS.USERS, "UserID", currentUser.userId, payload);
+          $("#loading-screen").fadeOut(200);
+          if (res) {
+             currentUser.email = payload.Email;
+             localStorage.setItem("visit_user", JSON.stringify(currentUser));
+             showToast("ปรับปรุงสิทธิ์รหัสผ่านของคุณเรียบร้อยแล้ว", "success");
+             window.location.hash = "#dashboard";
+          }
+       } catch(err) {
+          $("#loading-screen").fadeOut(200);
+          showToast("ปรับโครงสร้างล้มเหลว: " + err.message, "error");
+       }
+    });
+  });
+</script>

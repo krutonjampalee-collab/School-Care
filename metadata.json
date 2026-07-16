@@ -1,0 +1,6 @@
+{
+  "name": "Smart Home Visit",
+  "description": "Smart Home Visit System (บร.01) - School Edition for offline-first and online visit management",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

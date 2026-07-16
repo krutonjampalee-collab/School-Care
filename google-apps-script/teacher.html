@@ -1,0 +1,181 @@
+<!-- Teachers UI Module (teacher.html) -->
+<div class="authorized-area admin-only d-none mt-1">
+  <div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold text-dark"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>การจัดการครูและบุคลากรในโรงเรียน</h4>
+        <p class="text-secondary small mb-0">ปรับสถานะสมัครสมาชิก อนุมัติสิทธิ์ กำหนดระดับชั้นประเมินของที่ปรึกษา</p>
+      </div>
+      <button class="btn btn-primary" onclick="openTeacherModal()"><i class="fa-solid fa-plus me-2"></i>เพิ่มประวัติครู</button>
+    </div>
+
+    <!-- Active Membership List -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle small">
+        <thead class="bg-light">
+          <tr>
+            <th>รูป</th>
+            <th>รหัสครู</th>
+            <th>ชื่อ - นามสกุลประจำการ</th>
+            <th>ตำแหน่ง</th>
+            <th>กลุ่มสาระ/ฝ่าย</th>
+            <th>สิทธิ์เข้าใช้งาน</th>
+            <th>เบอร์ติดต่อ</th>
+            <th class="text-center">ตรวจสอบอนุมัติ</th>
+            <th class="text-center">แอกชันจัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="teachers-table-body">
+          <tr>
+            <td colspan="9" class="text-center text-muted py-5">กำลังรวบรวมรายนามทีมบุคลากรจากระบบคลาวด์...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function loadTeachersTable() {
+    try {
+      let res = await runBackend("getTeachersList");
+      let usersRes = await runBackend("getPendingUsers"); // Get users awaiting approval
+      
+      if (res.success) {
+        let content = "";
+        
+        // Merge pending indicator details if any Users have status != Active
+        let pendingUserMap = {};
+        if (usersRes && usersRes.length) {
+          usersRes.forEach(u => {
+            pendingUserMap[u.TeacherID] = u;
+          });
+        }
+
+        if (res.records.length === 0) {
+          $("#teachers-table-body").html(`<tr><td colspan="9" class="text-center text-muted py-4">ยังไม่มีข้อมูลบุคลากรครูในระบบแชร์</td></tr>`);
+          return;
+        }
+
+        res.records.forEach(t => {
+          let photo = t.ProfileImage || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+          let classAssigned = (t.AssignedGrade && t.AssignedRoom) ? `${t.AssignedGrade}/${t.AssignedRoom}` : "ยังไม่ได้กำหนด";
+          
+          let approvalBadge = "";
+          let pendingUser = pendingUserMap[t.TeacherID];
+          if (pendingUser) {
+             approvalBadge = `<button class="btn btn-warning btn-sm fw-bold animate-pulse text-dark" onclick="approveUserModal('${pendingUser.UserID}', '${pendingUser.FullName}')"><i class="fa-solid fa-user-clock me-1"></i> อนุมัติสิทธิ์</button>`;
+          } else {
+             approvalBadge = `<span class="badge bg-success small"><i class="fa-regular fa-circle-check me-1"></i> พร้อมใช้งาน</span>`;
+          }
+
+          content += `
+            <tr>
+              <td><img src="${photo}" class="rounded-circle" width="36" height="36" style="object-fit:cover;"></td>
+              <td class="fw-bold text-secondary">${t.TeacherCode}</td>
+              <td>${t.Prefix || ""}${t.FullName}</td>
+              <td><span class="text-dark small">${t.Position || "ครูผู้ช่วย"}</span></td>
+              <td><span class="text-secondary small">${t.Department || "แนะแนว สังคมศาสตร์"}</span></td>
+              <td><span class="badge bg-dark">${classAssigned}</span></td>
+              <td>${t.Phone || "-"}</td>
+              <td class="text-center">${approvalBadge}</td>
+              <td class="text-center">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-secondary" onclick='editTeacher(${JSON.stringify(t)})' title="แก้ไขข้อมูลครู"><i class="fa-solid fa-pen"></i></button>
+                  <button class="btn btn-outline-danger" onclick="deleteTeacherBtn('${t.TeacherID}')" title="ลบข้อมูลพ้นประจำการ"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        $("#teachers-table-body").html(content);
+      }
+    } catch (e) {
+      showToast("ระบบดึงข้อมูลบุคลากรล้มเหลว: " + e.message, "error");
+    }
+  }
+
+  function openTeacherModal() {
+    $("#form-teacher-id").val("");
+    $("#form-teacher")[0].reset();
+    $("#modalTeacherTitle").text("เพิ่มประวัติบุคลากรครู");
+    $("#modalTeacher").modal("show");
+  }
+
+  function editTeacher(t) {
+    $("#form-teacher-id").val(t.TeacherID);
+    $("#form-teacher-code").val(t.TeacherCode);
+    $("#form-teacher-prefix").val(t.Prefix);
+    $("#form-teacher-fullname").val(t.FullName);
+    $("#form-teacher-position").val(t.Position);
+    $("#form-teacher-dept").val(t.Department);
+    $("#form-teacher-phone").val(t.Phone);
+    $("#form-teacher-email").val(t.Email);
+    $("#form-teacher-grade").val(t.AssignedGrade);
+    $("#form-teacher-room").val(t.AssignedRoom);
+    
+    $("#modalTeacherTitle").text("แก้ไขข้อมูลครูผู้สอน");
+    $("#modalTeacher").modal("show");
+  }
+
+  function approveUserModal(userId, fullName) {
+    Swal.fire({
+      title: 'อนุมัติการสมัครสมาชิก',
+      text: `คุณต้องการอนุมัติสิทธิ์เข้าใช้งานความเชี่ยวชาญแด่คุณครู [${fullName}] หรือไม่?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'อนุมัติผู้สอน',
+      cancelButtonText: 'ปฏิเสธคำขอสมัคร',
+      showDenyButton: true,
+      denyButtonText: 'ยกเลิก',
+      denyButtonColor: '#94a3b8'
+    }).then(async (result) => {
+       if (result.isConfirmed) {
+          $("#loading-screen").fadeIn(200);
+          let res = await runBackend("approveUser", userId, true);
+          $("#loading-screen").fadeOut(200);
+          showToast(res.message, "success");
+          loadTeachersTable();
+       } else if (result.isDenied) {
+          // Cancelled
+       } else {
+          // Reject user code
+          $("#loading-screen").fadeIn(200);
+          let res = await runBackend("approveUser", userId, false);
+          $("#loading-screen").fadeOut(200);
+          showToast("ปฏิเสธคำขอใช้ระบบเรียบร้อย", "info");
+          loadTeachersTable();
+       }
+    });
+  }
+
+  function deleteTeacherBtn(teacherId) {
+    Swal.fire({
+      title: 'ลบชื่อทิ้งหรือไม่?',
+      text: "การลบจะเอาลบข้อมูลครู ประวัติที่ปรึกษา และบัญชี Users ที่ผูกกับรหัสนี้ด้วย",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'ใช่, ต้องการลบ!',
+      cancelButtonText: 'ยกเลิก'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        $("#loading-screen").fadeIn(200);
+        try {
+          let res = await runBackend("deleteTeacher", teacherId);
+          $("#loading-screen").fadeOut(200);
+          if (res.success) {
+            showToast(res.message, "success");
+            loadTeachersTable();
+          } else {
+             Swal.fire("ข้อขัดข้อง", res.message, "error");
+          }
+        } catch (err) {
+           $("#loading-screen").fadeOut(200);
+           Swal.fire("ผิดพลาด", err.message, "error");
+        }
+      }
+    });
+  }
+</script>

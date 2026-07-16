@@ -1,0 +1,197 @@
+<!-- System Dashboard (dashboard.html) -->
+<div class="row g-4 authorized-area d-none mt-1">
+  
+  <!-- Stats Cards Row -->
+  <div class="col-md-3">
+    <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+      <div>
+        <h6 class="text-secondary fw-semibold small mb-1">นักเรียนในระบบทั้งหมด</h5>
+        <h3 class="fw-bold mb-0 text-primary" id="dash-total-students">0</h3>
+        <span class="text-sm text-muted">ครอบคลุมทั้งโรงเรียน</span>
+      </div>
+      <div class="rounded-circle bg-primary-subtle p-3" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+        <i class="fa-solid fa-graduation-cap fs-4 text-primary"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+      <div>
+        <h6 class="text-secondary fw-semibold small mb-1">เยี่ยมบ้านสำเร็จแล้ว(คน)</h5>
+        <h3 class="fw-bold mb-0 text-success" id="dash-visited-students">0</h3>
+        <span class="badge bg-success" id="dash-ratio-progress">0% สำเร็จ</span>
+      </div>
+      <div class="rounded-circle bg-success-subtle p-3" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+        <i class="fa-solid fa-circle-check fs-4 text-success"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+      <div>
+        <h6 class="text-secondary fw-semibold small mb-1">ยังไม่ได้รายงานเยี่ยม</h5>
+        <h3 class="fw-bold mb-0 text-warning" id="dash-unvisited-students">0</h3>
+        <span class="text-sm text-muted">อยู่ระหว่างดำเนินการ</span>
+      </div>
+      <div class="rounded-circle bg-warning-subtle p-3" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+        <i class="fa-solid fa-clock-rotate-left fs-4 text-warning"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+      <div>
+        <h6 class="text-secondary fw-semibold small mb-1">นักเรียนกลุ่มเสี่ยง/ติดตาม</h5>
+        <h3 class="fw-bold mb-0 text-danger" id="dash-risk-students">0</h3>
+        <span class="text-sm text-danger-emphasis">ต้องการดูแลเร่งด่วน</span>
+      </div>
+      <div class="rounded-circle bg-danger-subtle p-3" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+        <i class="fa-solid fa-triangle-exclamation fs-4 text-danger"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Block -->
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-pie me-2 text-primary"></i>สัดส่วนสถานะการเยี่ยมบ้าน</h5>
+      <div style="height: 280px; position: relative;" class="d-flex align-items-center justify-content-center">
+        <canvas id="chart-visit-ratio"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-simple me-2 text-success"></i>วิเคราะห์ระดับความเสี่ยงนักเรียนในการเยี่ยม</h5>
+      <div style="height: 280px;" class="d-flex align-items-center justify-content-center">
+        <canvas id="chart-risk-analysis"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Logs Area -->
+  <div class="col-12">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-4"><i class="fa-solid fa-clock-rotate-left me-2 text-secondary"></i>ประวัติกิจกรรมล่าสุดในระบบ (Audit Logs)</h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle small">
+          <thead class="bg-light">
+            <tr>
+              <th>รหัสล็อก</th>
+              <th>เวลาดำเนินการ</th>
+              <th>ผู้ดำเนินการ</th>
+              <th>กิจกรรม</th>
+              <th>รายละเอียด</th>
+            </tr>
+          </thead>
+          <tbody id="logs-table-body">
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">ไม่มีข้อมูลการทำกิจกรรมเมื่อไม่นานมานี้</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let visitRatioChart = null;
+  let riskAnalysisChart = null;
+
+  async function loadDashboardMetrics() {
+    try {
+      let res = await runBackend("getDashboardStats");
+      if (res.success) {
+        $("#dash-total-students").text(res.stats.totalStudents);
+        $("#dash-visited-students").text(res.stats.visitedCount);
+        $("#dash-unvisited-students").text(res.stats.unvisitedCount);
+        $("#dash-risk-students").text(res.stats.pendingFollowUps);
+        $("#dash-ratio-progress").text(`${res.stats.visitRatio}% สำเร็จ`);
+        
+        // Initializing Pie and Bar Charts
+        renderVisitChart(res.stats.visitedCount, res.stats.unvisitedCount);
+        renderRiskChart(res.stats.riskLevels);
+      }
+      
+      let logsRes = await runBackend("getRecentLogs");
+      if (logsRes.success && logsRes.records.length) {
+        let content = "";
+        logsRes.records.forEach(l => {
+          let dateStr = new Date(l.Timestamp).toLocaleString('th-TH');
+          content += `
+            <tr>
+              <td class="fw-bold text-secondary">${l.LogID}</td>
+              <td>${dateStr}</td>
+              <td><span class="badge bg-secondary-subtle text-dark">${l.UserID}</span></td>
+              <td><span class="badge bg-primary">${l.Action}</span></td>
+              <td class="text-muted">${l.Detail}</td>
+            </tr>
+          `;
+        });
+        $("#logs-table-body").html(content);
+      }
+    } catch (e) {
+      showToast("ไม่สามารถประมวลผลอินโฟกราฟฟิกสะท้อนกลับได้" + e.message, "error");
+    }
+  }
+
+  function renderVisitChart(visited, unvisited) {
+    if (visitRatioChart) visitRatioChart.destroy();
+    const ctx = document.getElementById('chart-visit-ratio').getContext('2d');
+    visitRatioChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['ค้างรายนามเยี่ยม', 'เยี่ยมบ้านเสร็จลุล่วง'],
+        datasets: [{
+          data: [unvisited, visited],
+          backgroundColor: ['#cbd5e1', '#10b981'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+
+  function renderRiskChart(riskCounts) {
+    if (riskAnalysisChart) riskAnalysisChart.destroy();
+    
+    // Sort keys logically
+    const levels = ["ปกติ", "เสี่ยง", "มีปัญหา", "เร่งด่วน"];
+    const counts = levels.map(lbl => riskCounts[lbl] || 0);
+
+    const ctx = document.getElementById('chart-risk-analysis').getContext('2d');
+    riskAnalysisChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: levels,
+        datasets: [{
+          label: 'จำนวนนักเรียนจำแนกความหนาเหนียว',
+          data: counts,
+          backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#7f1d1d'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+  }
+</script>

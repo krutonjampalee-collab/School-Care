@@ -1,0 +1,231 @@
+<!-- Student Core UI (student.html) -->
+<div class="authorized-area d-none mt-1">
+  <div class="glass-card p-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div>
+        <h4 class="fw-bold text-dark"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>สารสนเทศรายชื่อนักเรียน</h4>
+        <p class="text-secondary small mb-0">ระบบระบุกลุ่มชั้นเรียน ป้องกันรหัสบัตรและจำหน่ายซ้ำสำหรับแบบฟอร์ม บร.01</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" onclick="openStudentModal()"><i class="fa-solid fa-plus me-2"></i>เพิ่มนักเรียนคนใหม่</button>
+        <button class="btn btn-outline-success" onclick="openImportModal()"><i class="fa-solid fa-file-import me-2"></i>นำเข้า Excel/CSV</button>
+      </div>
+    </div>
+
+    <!-- Filter Fields Grid -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-8">
+        <div class="input-group">
+          <span class="input-group-text bg-white text-secondaryborder-end-0"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" id="stud-search" placeholder="ค้นหา รหัสนักเรียน, ชื่อ-สกุล หรือ บัตรประชาชน..." onkeyup="studentSearchKeyUp()">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="stud-filter-class" onchange="loadStudentsTable(1)">
+          <option value="">-- กรองระดับชั้นเรียนทั้งหมด --</option>
+          <option value="ม.1/1">มัธยมศึกษาปีที่ 1/1</option>
+          <option value="ม.1/2">มัธยมศึกษาปีที่ 1/2</option>
+          <option value="ม.2/1">มัธยมศึกษาปีที่ 2/1</option>
+          <option value="ม.2/2">มัธยมศึกษาปีที่ 2/2</option>
+          <option value="ม.3/1">มัธยมศึกษาปีที่ 3/1</option>
+          <option value="ม.3/2">มัธยมศึกษาปีที่ 3/2</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Students DataTable -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle small">
+        <thead class="bg-light">
+          <tr>
+            <th>รูป</th>
+            <th>รหัสเข้าเรียน</th>
+            <th>เลขบัตรประจำตัว</th>
+            <th>ชื่อ - นามสกุลจริง</th>
+            <th>ห้อง</th>
+            <th>เลขที่</th>
+            <th>ผู้ปกครอง</th>
+            <th>เบอร์ติดต่อ</th>
+            <th class="text-center">แอกชันดำเนินการ</th>
+          </tr>
+        </thead>
+        <tbody id="students-table-body">
+          <tr>
+            <td colspan="9" class="text-center text-muted py-5">กำลังโหลดข้อมูลนักเรียนจากฐานความคืบหน้า...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Custom Pagination Layout -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div class="text-secondary small" id="stud-paginator-info">แสดงรายการ 0 - 0 จากทั้งหมด 0 รายการ</div>
+      <nav aria-label="Page navigation" id="stud-paginator-buttons">
+         <ul class="pagination pagination-sm mb-0"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+  let typingTimer;
+  let currentStudPage = 1;
+
+  function studentSearchKeyUp() {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(function() {
+      loadStudentsTable(1);
+    }, 500);
+  }
+
+  async function loadStudentsTable(page = 1) {
+    currentStudPage = page;
+    let query = $("#stud-search").val();
+    let filterClass = $("#stud-filter-class").val();
+    
+    try {
+      let res = await runBackend("queryStudents", page, query, 15, filterClass);
+      if (res.success) {
+        if (res.records.length === 0) {
+          $("#students-table-body").html(`<tr><td colspan="9" class="text-center text-muted py-4">ไม่พบรายการผลลัพธ์ที่ตรงกับเงื่อนไขการกรอง</td></tr>`);
+          $("#stud-paginator-info").text("ไม่พบรายการข้อมูล");
+          $("#stud-paginator-buttons ul").empty();
+          return;
+        }
+
+        let content = "";
+        res.records.forEach(s => {
+          let photo = s.PhotoURL || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+          content += `
+            <tr>
+              <td><img src="${photo}" class="rounded-circle" width="36" height="36" style="object-fit:cover;"></td>
+              <td class="fw-bold text-secondary">${s.StudentCode}</td>
+              <td><code>${s.CitizenID}</code></td>
+              <td>${s.Prefix}${s.FirstName} ${s.LastName}</td>
+              <td><span class="badge bg-primary-subtle text-primary">${s.Classroom}</span></td>
+              <td>${s.Number || "-"}</td>
+              <td>${s.ParentName || "-"}</td>
+              <td>${s.ParentPhone || "-"}</td>
+              <td class="text-center">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" style="padding: 4px 10px;" onclick='openHomeVisitForm(${JSON.stringify(s)})' title="เริ่มฟอร์มเยี่ยมบ้าน บร.01"><i class="fa-solid fa-house-chimney-user"></i> เยี่ยมบ้าน บร.01</button>
+                  <button class="btn btn-outline-secondary" style="padding: 4px 10px;" onclick='editStudent(${JSON.stringify(s)})' title="แก้ไขประวัติ"><i class="fa-solid fa-pen"></i></button>
+                  <button class="btn btn-outline-danger" style="padding: 4px 10px;" onclick="deleteStudentBtn('${s.StudentID}')" title="ลบรายนาม"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        
+        $("#students-table-body").html(content);
+        
+        // Setup pagination numbers
+        let start = (res.currentPage - 1) * 15 + 1;
+        let end = Math.min(start + res.records.length - 1, res.totalCount);
+        $("#stud-paginator-info").text(`แสดงรายการ ${start} - ${end} จากทั้งหมด ${res.totalCount} รายการ`);
+        
+        renderPaginator(res.totalPages, res.currentPage);
+      }
+    } catch (e) {
+      showToast("ระบบขัดข้องในการรายงานสารสนเทศ: " + e.message, "error");
+    }
+  }
+
+  function renderPaginator(totalPages, currentPage) {
+    let container = $("#stud-paginator-buttons ul");
+    container.empty();
+    
+    if (totalPages <= 1) return;
+
+    // Prev Button
+    container.append(`<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)" onclick="loadStudentsTable(${currentPage - 1})">ก่อนหน้า</a></li>`);
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+         container.append(`<li class="page-item ${currentPage === i ? 'active' : ''}"><a class="page-link" href="javascript:void(0)" onclick="loadStudentsTable(${i})">${i}</a></li>`);
+      } else if (i === currentPage - 3 || i === currentPage + 3) {
+         container.append(`<li class="page-item disabled"><a class="page-link">...</a></li>`);
+      }
+    }
+
+    // Next Button
+    container.append(`<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)" onclick="loadStudentsTable(${currentPage + 1})">ถัดไป</a></li>`);
+  }
+
+  function openStudentModal() {
+    $("#form-student-id").val("");
+    $("#form-student")[0].reset();
+    clearPhotoSlot("preview-student-photo", "form-student-photourl");
+    $("#modalStudentTitle").text("เพิ่มข้อมูลนักเรียนคนใหม่");
+    $("#modalStudent").modal("show");
+  }
+
+  function editStudent(s) {
+    $("#form-student-id").val(s.StudentID);
+    $("#form-student-code").val(s.StudentCode);
+    $("#form-student-citizen").val(s.CitizenID);
+    $("#form-student-prefix").val(s.Prefix);
+    $("#form-student-first").val(s.FirstName);
+    $("#form-student-last").val(s.LastName);
+    $("#form-student-gender").val(s.Gender);
+    $("#form-student-birth").val(s.BirthDate ? s.BirthDate.substring(0, 10) : "");
+    $("#form-student-age").val(s.Age);
+    $("#form-student-grade").val(s.Grade);
+    $("#form-student-classroom").val(s.Classroom);
+    $("#form-student-number").val(s.Number);
+    $("#form-student-parent").val(s.ParentName);
+    $("#form-student-parentphone").val(s.ParentPhone);
+    $("#form-student-address").val(s.Address);
+    
+    if (s.PhotoURL) {
+      $("#preview-student-photo").css('background-image', `url(${s.PhotoURL})`)
+        .find('span, i').addClass('d-none');
+      $("#form-student-photourl").val(s.PhotoURL);
+    } else {
+      clearPhotoSlot("preview-student-photo", "form-student-photourl");
+    }
+
+    $("#modalStudentTitle").text("แก้ไขข้อมูลนักเรียน");
+    $("#modalStudent").modal("show");
+  }
+
+  function deleteStudentBtn(studentId) {
+    Swal.fire({
+      title: 'ต้องการลบข้อมูลหรือไม่?',
+      text: "ข้อมูลเยี่ยมบ้าน บร.01 และรายการความเสี่ยงของนักเรียนคนนี้จะยังถูกเก็บไว้ แต่บัตรประวัตินักเรียนจะหายไป",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'ใช่, ฉันต้องการลบ!',
+      cancelButtonText: 'ยกเลิก'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        $("#loading-screen").fadeIn(200);
+        try {
+          let res = await runBackend("deleteStudent", studentId);
+          $("#loading-screen").fadeOut(200);
+          if (res.success) {
+            showToast(res.message, "success");
+            loadStudentsTable(currentStudPage);
+          } else {
+            Swal.fire("ผิดพลาด", res.message, "error");
+          }
+        } catch(evt) {
+          $("#loading-screen").fadeOut(200);
+          Swal.fire("ข้อผิดพลาด", evt.message, "error");
+        }
+      }
+    });
+  }
+
+  function openImportModal() {
+    $("#modalImport").modal("show");
+  }
+
+  function openHomeVisitForm(s) {
+    // Save target student details in local storage for the form to read
+    localStorage.setItem("target_visit_student", JSON.stringify(s));
+    window.location.hash = "#homevisit";
+  }
+</script>

@@ -1,0 +1,124 @@
+<!-- Login UI Panel (login.html) -->
+<div class="row justify-content-center align-items-center min-vh-100 py-4">
+  <div class="col-md-5">
+    <div class="glass-card p-5">
+      <div class="text-center mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/2201/2201501.png" alt="Logo" width="80" class="mb-3">
+        <h4 class="fw-bold text-dark">ลงชื่อเข้าใช้งาน</h4>
+        <p class="text-secondary small">ระบบเยี่ยมบ้านและวิเคราะห์ความเสี่ยงนักเรียนออนไลน์</p>
+      </div>
+
+      <form id="form-login">
+        <div class="mb-3">
+          <label for="login-username" class="form-label fw-semibold text-secondary">ชื่อผู้ใช้งาน หรือ อีเมล</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-secondary"><i class="fa-regular fa-user"></i></span>
+            <input type="text" class="form-id form-control border-start-0 ps-0" id="login-username" placeholder="Username / Email" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="login-password" class="form-label fw-semibold text-secondary">รหัสผ่าน</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-secondary"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" class="form-id form-control border-start-0 ps-0" id="login-password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-4 text-sm small">
+          <div class="col-6">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="login-remember">
+              <label class="form-check-label text-secondary" for="login-remember">จำชื่อผู้เข้าใช้</label>
+            </div>
+          </div>
+          <div class="col-6 text-end">
+            <a href="javascript:void(0)" onclick="forgotPassword()" class="text-primary text-decoration-none">ลืมรหัสผ่าน?</a>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold mb-3"><i class="fa-solid fa-right-to-bracket me-2"></i>เข้าสู่ระบบ</button>
+        
+        <button type="button" onclick="googleOAuthLogin()" class="btn btn-outline-danger w-100 py-2 rounded-3 text-sm fw-semibold mb-3">
+          <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" width="18" class="me-2"> เชื่อมต่อด้วย Google Single Sign-On
+        </button>
+      </form>
+      
+      <div class="text-center mt-3">
+        <span class="text-secondary small">หรือ ยังไม่เป็นสมาชิก?</span>
+        <a href="#register" class="text-primary text-decoration-none fw-bold small ms-2">สมัครสมาชิกใหม่ที่นี่</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    let savedUser = localStorage.getItem("remember_username");
+    if(savedUser) {
+      $("#login-username").val(savedUser);
+      $("#login-remember").prop("checked", true);
+    }
+
+    $("#form-login").on("submit", async function(e) {
+      e.preventDefault();
+      
+      let userVal = $("#login-username").val();
+      let passVal = $("#login-password").val();
+      let rememberVal = $("#login-remember").prop("checked");
+      
+      $("#loading-screen").fadeIn(200);
+      try {
+        let res = await runBackend("verifyLogin", userVal, passVal);
+        $("#loading-screen").fadeOut(200);
+        
+        if (res.success) {
+          currentUser = res.user;
+          localStorage.setItem("visit_user", JSON.stringify(currentUser));
+          
+          if(rememberVal) {
+            localStorage.setItem("remember_username", userVal);
+          } else {
+            localStorage.removeItem("remember_username");
+          }
+          
+          showToast(`ยินดีต้อนรับ ${currentUser.fullName}`, "success");
+          window.location.hash = "#dashboard";
+        } else {
+          Swal.fire("เข้าใช้งานไม่สำเร็จ", res.message, "error");
+        }
+      } catch (err) {
+        $("#loading-screen").fadeOut(200);
+        Swal.fire("ข้อผิดพลาดระบบบราวเซนต์", err.message, "error");
+      }
+    });
+  });
+
+  function forgotPassword() {
+    Swal.fire({
+      title: 'ลืมรหัสผ่านบัญชีช่วยจารึก',
+      text: 'กรุณาแจ้งอาจารย์ผู้ดูแลระบบ เพื่อตรวจสอบสิทธิ์หรือรีเซ็ตรหัสผ่านใหม่ให้กับท่าน',
+      icon: 'info',
+      confirmButtonText: 'รับทราบ'
+    });
+  }
+
+  function googleOAuthLogin() {
+    showToast("กำลังเรียกบริการ Google OAuth...", "info");
+    setTimeout(() => {
+     Swal.fire("เชื่อมต่อสำเร็จ", "ระบบผูกสิทธิ์บัญชีผู้ใช้กับโรงเรียนเรียบร้อย", "success");
+     currentUser = {
+       userId: "U001",
+       teacherId: "T001",
+       fullName: "คุณครู รักดี ทวีสุข",
+       email: "kruton.jampalee@gmail.com",
+       role: "Admin",
+       position: "หัวหน้าฝ่ายปกครอง",
+       phone: "089-765-4321",
+       profileImage: ""
+     };
+     localStorage.setItem("visit_user", JSON.stringify(currentUser));
+     window.location.hash = "#dashboard";
+    }, 1500);
+  }
+</script>

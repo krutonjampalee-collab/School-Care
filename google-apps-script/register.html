@@ -1,0 +1,112 @@
+<!-- Teacher Signup (register.html) -->
+<div class="row justify-content-center py-5">
+  <div class="col-md-7">
+    <div class="glass-card p-5">
+      <div class="text-center mb-4">
+        <h3 class="fw-bold">ลงทะเบียนสมัครสมาชิก</h3>
+        <p class="text-secondary small">สำหรับอาจารย์ผู้เข้าเยี่ยมบ้านนักเรียน เพื่อขออนุมัติใช้งานฐานข้อมูล БР.01</p>
+      </div>
+
+      <form id="form-register">
+        <div class="row g-3">
+          <div class="col-md-6 mb-2">
+            <label for="reg-teachercode" class="form-label text-secondary fw-semibold small">รหัสวิทยฐานะ / รหัสประจำตัวครู</label>
+            <input type="text" class="form-control" id="reg-teachercode" placeholder="ระบุรหัสครู 5 หลัก" required>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label for="reg-fullname" class="form-label text-secondary fw-semibold small">ชื่อ - นามสกุลจริง</label>
+            <input type="text" class="form-control" id="reg-fullname" placeholder="ระบุคำนำหน้า พร้อมชื่อจริง" required>
+          </div>
+          
+          <div class="col-md-6 mb-2">
+            <label for="reg-position" class="form-label text-secondary fw-semibold small">ตำแหน่งวิชาการ</label>
+            <select class="form-select" id="reg-position">
+              <option value="ครูผู้สอน">ครูผู้สอน</option>
+              <option value="ครูประจำชั้น">ครูประจำชั้น</option>
+              <option value="ครูที่ปรึกษา">ครูที่ปรึกษา</option>
+              <option value="ครูอัตราจ้าง">ครูอัตราจ้าง</option>
+              <option value="หัวหน้างานแนะแนว">หัวหน้างานแนะแนว</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label for="reg-phone" class="form-label text-secondary fw-semibold small">เบอร์โทรศัพท์ติดต่อ</label>
+            <input type="tel" class="form-control" id="reg-phone" placeholder="ระบุเบอร์โทรศัพท์ที่ติดต่อได้" required>
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <label for="reg-email" class="form-label text-secondary fw-semibold small">ที่อยู่อีเมลสถาบัน (Email)</label>
+            <input type="email" class="form-control" id="reg-email" placeholder="example@school.ac.th" required>
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <label for="reg-username" class="form-label text-secondary fw-semibold small">ชื่อเข้าใช้งานระบบ (Username)</label>
+            <input type="text" class="form-control" id="reg-username" placeholder="ภาษาอังกฤษหลักเลี่ยงเว้นวรรค" required>
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label for="reg-password" class="form-label text-secondary fw-semibold small">รหัสผ่านสำหรับเข้าใช้ (Password)</label>
+            <input type="password" class="form-control" id="reg-password" placeholder="อย่างน้อย 6 ตัวอักษร" minlength="4" required>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label for="reg-confirm" class="form-label text-secondary fw-semibold small">ยืนยันรหัสผ่านอีกครั้ง</label>
+            <input type="password" class="form-control" id="reg-confirm" placeholder="กรอกรหัสตรงกัน" required>
+          </div>
+          
+          <div class="col-12 mt-4 text-center">
+             <button type="submit" class="btn btn-primary btn-lg w-50 fw-bold"><i class="fa-solid fa-user-plus me-2"></i>สร้างบัญชีผู้ใช้งาน</button>
+             <p class="text-muted small mt-3">ระบบลงทะเบียนเมื่อเสร็จสิ้นจะมีสถานะ <span class="badge bg-warning text-dark">รออนุมัติ</span> ประธานคณะแนะแนวหรือ แอดมินหลักจะเป็นฝ่ายระบุเปิดการทำงาน</p>
+          </div>
+        </div>
+      </form>
+      
+      <div class="text-center mt-3 border-top pt-3">
+        <span class="text-secondary small">หรือ เป็นสมาชิกในสังกัดอยู่แล้ว?</span>
+        <a href="#login" class="text-primary text-decoration-none fw-bold small ms-2">เข้าสู่ระบบหลักที่นี่</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("#form-register").on("submit", async function(e) {
+      e.preventDefault();
+      
+      let p1 = $("#reg-password").val();
+      let p2 = $("#reg-confirm").val();
+      if(p1 !== p2) {
+        Swal.fire("รหัสผ่านไม่ตรงกัน", "กรุณาแก้ไขข้อมูลรหัสผ่านให้ตรงกันทั้งสองช่อง", "warning");
+        return;
+      }
+
+      let payload = {
+        TeacherID: "T" + String(Date.now()).substring(7),
+        Username: $("#reg-username").val(),
+        Password: p1,
+        Email: $("#reg-email").val(),
+        FullName: $("#reg-fullname").val(),
+        Position: $("#reg-position").val(),
+        Phone: $("#reg-phone").val(),
+        Role: "Teacher",
+        ProfileImage: ""
+      };
+
+      $("#loading-screen").fadeIn(200);
+      try {
+        let res = await runBackend("registerUser", payload);
+        $("#loading-screen").fadeOut(200);
+        if(res.success){
+          Swal.fire("ลงทะเบียนสำเร็จ", res.message, "success")
+            .then(() => {
+               window.location.hash = "#login";
+            });
+        } else {
+          Swal.fire("เกิดข้อขัดข้อง", res.message, "error");
+        }
+      } catch(err) {
+        $("#loading-screen").fadeOut(200);
+        Swal.fire("ข้อผิดพลาด", err.message, "error");
+      }
+    });
+  });
+</script>

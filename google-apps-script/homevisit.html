@@ -1,0 +1,457 @@
+<!-- Home Visit Form Br.01 (homevisit.html) -->
+<div class="authorized-area d-none mt-1">
+  <div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+      <div>
+        <h4 class="fw-bold text-dark"><i class="fa-solid fa-house-laptop me-2 text-primary"></i>บันทึกผลการเยี่ยมบ้านนักเรียน (แบบฟอร์ม บร.01)</h4>
+        <p class="text-secondary small mb-0">เก็บประวัติพรรคพวก ทะเบียนบ้าน พฤติกรรม คะแนน SDQ และบันทึกพิกัดจีพีเอสแบบคลาวด์</p>
+      </div>
+      <button class="btn btn-outline-secondary" onclick="window.location.hash='#student'"><i class="fa-solid fa-chevron-left me-1"></i> กลับไปรายชื่อนักเรียน</button>
+    </div>
+
+    <!-- Active Form Progress Navigation -->
+    <ul class="nav nav-pills nav-fill mb-4 bg-light p-2 rounded-3 small text-sm" id="formTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" id="tab1-head" data-bs-toggle="pill" data-bs-target="#tab1" type="button"><i class="fa-solid fa-circle-1 me-1"></i> ส่วนที่ 1-3</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="tab2-head" data-bs-toggle="pill" data-bs-target="#tab2" type="button"><i class="fa-solid fa-circle-2 me-1"></i> ส่วนที่ 4-5 บ้าน-เงิน</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="tab3-head" data-bs-toggle="pill" data-bs-target="#tab3" type="button"><i class="fa-solid fa-circle-3 me-1"></i> ส่วนที่ 6-7 พฤติกรรม-SDQ</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="tab4-head" data-bs-toggle="pill" data-bs-target="#tab4" type="button"><i class="fa-solid fa-circle-4 me-1"></i> ส่วนที่ 8 ภาพ-ลายเซ็น</button>
+      </li>
+    </ul>
+
+    <form id="form-homevisit">
+      <div class="tab-content" id="formTabsContent">
+        
+        <!-- ======================= SECTION 1-3 ======================= -->
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+          <div class="row g-3">
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3">ข้อมูลทั่วไปและการเยี่ยมบ้าน</h5>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ปีการศึกษา</label>
+              <input type="text" class="form-control" id="vis-academicyear" value="2569" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ภาคเรียนที่</label>
+              <select class="form-select" id="vis-semester">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">วันที่เข้าเยี่ยม</label>
+              <input type="date" class="form-control" id="vis-date" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">รอบการเยี่ยม</label>
+              <select class="form-select" id="vis-round">
+                <option value="1">ปกติประจำปี</option>
+                <option value="2">ติดตามพฤติกรรมเสี่ยง</option>
+              </select>
+            </div>
+
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">ข้อมูลนักเรียนเป้าหมาย</h5>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">รหัสเข้าประจำตัว</label>
+              <input type="text" class="form-control bg-light" id="vis-studentcode" readonly>
+              <input type="hidden" id="vis-studentid">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">ชื่อ - นามสกุลจริงนักเรียน</label>
+              <input type="text" class="form-control bg-light" id="vis-studentname" readonly>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label text-secondary small fw-semibold">ห้องเรียนที่สังกัด</label>
+              <input type="text" class="form-control bg-light" id="vis-classroom" readonly>
+            </div>
+            <div class="col-md-1">
+              <label class="form-label text-secondary small fw-semibold">เลขที่</label>
+              <input type="text" class="form-control bg-light" id="vis-number" readonly>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label text-secondary small fw-semibold">อายุ ณ ปัจจุบัน (ปี)</label>
+              <input type="text" class="form-control bg-light" id="vis-age" readonly>
+            </div>
+
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">ข้อมูลผู้ปกครองสิทธิ์อ้างอิง</h5>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">ชื่อผู้ปกครองปัจจุบัน</label>
+              <input type="text" class="form-control" id="vis-parentname" required placeholder="ระบุชื่อผู้อยู่ดูแลจริง">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label text-secondary small fw-semibold">ความสัมพันธ์</label>
+              <select class="form-select" id="vis-parentrelation">
+                <option value="บิดา">บิดา</option>
+                <option value="มารดา">มารดา</option>
+                <option value="ปู่/ย่า/ตา/ยาย">ปู่/ย่า/ตา/ยาย</option>
+                <option value="ลุง/ป้า/น้า/อา">ลุง/ป้า/น้า/อา</option>
+                <option value="ผู้ปกครองอุปการะ">ผู้ปกครองอุปการะ</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">อาชีพผู้ปกครองหลัก</label>
+              <input type="text" class="form-control" id="vis-parentjob" placeholder="ระบุอาชีพเพื่อวิเคราะห์สถานะ">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">เบอร์โทรศัพท์ผู้ปกครอง</label>
+              <input type="tel" class="form-control" id="vis-parentphone" required placeholder="08x-xxxxxxx">
+            </div>
+            
+            <div class="col-12 text-end mt-4">
+               <button type="button" class="btn btn-primary btn-lg" onclick="$('#tab2-head').tab('show')"><i class="fa-solid fa-chevron-right me-1"></i>หน้าถัดไป (ส่วนที่ 4-5)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================= SECTION 4-5 ======================= -->
+        <div class="tab-pane fade" id="tab2" role="tabpanel">
+          <div class="row g-3">
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3">ที่อยู่อาศัยและสภาพแวดล้อมทางสังคม</h5>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">ประเภทที่อยู่อาศัยหลัก</label>
+              <select class="form-select" id="vis-housetype">
+                <option value="บ้านเดี่ยวของตนเอง">บ้านเดี่ยวของตนเอง</option>
+                <option value="บ้านเช่าพานิชย์">บ้านเช่าพานิชย์</option>
+                <option value="ห้องแถวสลัม">ห้องแถวสลัม</option>
+                <option value="หอพักแฟลตอพาร์ตเมนต์">หอพักแฟลตอพาร์ตเมนต์</option>
+                <option value="อาศัยผู้อื่นชั่วคราว">อาศัยผู้อื่นชั่วคราว</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">สภาพบ้านภายนอก</label>
+              <select class="form-select" id="vis-housecondition">
+                <option value="มั่นใจ ปลอดภัยดี">มั่นคง ปลอดภัยดี</option>
+                <option value="ทรุดโทรม ขาดความมั่นคง">ทรุดโทรม ขาดความมั่นคง</option>
+                <option value="ผุพังชั่วคราว คับแคบ">ผุพังชั่วคราว คับแคบ</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">จำนวนสมาชิกในครัวเรือน (คน)</label>
+              <input type="number" class="form-control" id="vis-housemembers" value="3">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ระบบไฟฟ้าในบ้าน</label>
+              <select class="form-select" id="vis-electricity">
+                <option value="มีใช้อย่างมั่นคง">มีใช้อย่างมั่นคง</option>
+                <option value="ไม่มีไฟเข้าถึง">ไม่มีไฟเข้าถึง</option>
+                <option value="พ่วงต่อเพื่อนบ้านชั่วคราว">พ่วงต่อเพื่อนบ้านชั่วคราว</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ระบบน้ำประปาสะอาด</label>
+              <select class="form-select" id="vis-water">
+                <option value="มีใช้อย่างดี">มีใช้อย่างดี</option>
+                <option value="ขาดแคลน/ต้องซื้อดื่ม">ขาดแคลน/ต้องซื้อดื่ม</option>
+                <option value="ใช้น้ำบาดาล/บ่อน้ำ">ใช้น้ำบาดาล/บ่อน้ำ</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">สัญญาณอินเทอร์เน็ตที่บ้าน</label>
+              <select class="form-select" id="vis-internet">
+                <option value="สัญญาณดี มี Wifi">สัญญาณดี มี Wifi</option>
+                <option value="ไม่มีสัญญาณ/ใช้ซิมส่วนตัว">ไม่มีสัญญาณ/ใช้ซิมส่วนตัว</option>
+                <option value="ไม่มีอินเทอร์เน็ตเข้าถึง">ไม่มีอินเทอร์เน็ตเข้าถึง</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">พาหนะที่ใช้มาโรงเรียน</label>
+              <select class="form-select" id="vis-vehicle">
+                <option value="รถจักรยานยนต์/รถส่วนตัว">รถจักรยานยนต์/รถส่วนตัว</option>
+                <option value="รถรับส่งนักเรียนประจำคัน">รถรับส่งนักเรียนประจำคัน</option>
+                <option value="เดินเท้า/ถีบจักรยาน">เดินเท้า/ถีบจักรยาน</option>
+                <option value="รถโดยสารสาธารณะ">รถโดยสารสาธารณะ</option>
+              </select>
+            </div>
+
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">ด้านเศรษฐศาสตร์ครัวเรือน</h5>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">รายได้เฉลี่ยรายบุคคลในครอบครัว/เดือน (บาท)</label>
+              <input type="number" class="form-control" id="vis-familyincome" value="12000">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">หนี้สินของครอบครัว</label>
+              <select class="form-select" id="vis-familydebts">
+                <option value="ไม่มีหนี้สิน">ไม่มีหนี้สิน</option>
+                <option value="มีหนี้สินเพื่อการอุปโภคบริโภค">มีหนี้สินพานิชย์เพื่อการอุปโภค</option>
+                <option value="หน้นอกระบบอัตราดอกเบี้ยสูง">หน้นอกระบบดอกเบี้ยสูง</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">สวัสดิการผู้มีรายได้น้อย</label>
+              <select class="form-select" id="vis-welfare">
+                <option value="ไม่ได้ขอบัตรสวัสดิการแห่งรัฐ">ไม่ได้ขอบัตรสวัสดิการ</option>
+                <option value="มีบัตรสวัสดิการรัฐครอบคลุม">มีบัตรสวัสดิการรัฐครอบคลุม</option>
+              </select>
+            </div>
+            
+            <div class="col-12 text-end mt-4 d-flex justify-content-between">
+               <button type="button" class="btn btn-outline-secondary btn-lg" onclick="$('#tab1-head').tab('show')"><i class="fa-solid fa-chevron-left me-1"></i> ย้อนกลับ</button>
+               <button type="button" class="btn btn-primary btn-lg" onclick="$('#tab3-head').tab('show')"><i class="fa-solid fa-chevron-right me-1"></i>หน้าถัดไป (ส่วนที่ 6-7)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================= SECTION 6-7 ======================= -->
+        <div class="tab-pane fade" id="tab3" role="tabpanel">
+          <div class="row g-3">
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3">พฤติกรรมการมาเรียนและสภาพสังคมภายนอก</h5>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">ผลสัมฤทธิ์ทางการเรียน (GPA ล่าสุด)</label>
+              <input type="text" class="form-control" id="vis-academicgpa" value="3.12">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">พฤติกรรมการมาโรงเรียน</label>
+              <select class="form-select" id="vis-attendance">
+                <option value="มาเรียนสม่ำเสมอ">มาเรียนสม่ำเสมอ</option>
+                <option value="ขาดเรียนบ่อยเป็นช่วงๆ">ขาดเรียนบ่อยเป็นช่วงๆ</option>
+                <option value="สายประจำ/ขาดเรียนต่อเนื่อง">สายประจำ/ขาดเรียนต่อเนื่อง</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small fw-semibold">การใช้เวลาว่างพฤติกรรมเสี่ยง</label>
+              <select class="form-select" id="vis-hobbystate">
+                <option value="ช่วยเหลืองานบ้าน/อ่านหนังสือ">ช่วยงานผู้ปกครอง/เสริมความรู้</option>
+                <option value="เที่ยวพักผ่อน/เน้นเล่นสมาร์ทโฟน">ท่องเที่ยว/ติดมือถือค่อนข้างมาก</option>
+                <option value="จับกลุ่มเพื่อนในพื้นที่สุ่มเสี่ยง">สมาคมกลุ่มในพื้นที่เสี่ยงประปราย</option>
+              </select>
+            </div>
+
+            <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">แบบประเมินจุดแข็งและจุดอ่อนนักเรียน (ประเมินคะแนน SDQ 5 ด้าน)</h5>
+            <div class="col-md-2.4 col-sm-6 mb-2">
+              <label class="form-label text-secondary small fw-semibold">ด้านอารมณ์ (เต็ม 10)</label>
+              <input type="number" class="form-control" id="sdq-emotional" min="0" max="10" value="3">
+            </div>
+            <div class="col-md-2.4 col-sm-6 mb-2">
+              <label class="form-label text-secondary small fw-semibold">ด้านพฤติกรรมเกเร (เต็ม 10)</label>
+              <input type="number" class="form-control" id="sdq-conduct" min="0" max="10" value="2">
+            </div>
+            <div class="col-md-2.4 col-sm-6 mb-2">
+              <label class="form-label text-secondary small fw-semibold">ด้านซนสมาธิสั้น (เต็ม 10)</label>
+              <input type="number" class="form-control" id="sdq-hyperactive" min="0" max="10" value="4">
+            </div>
+            <div class="col-md-2.4 col-sm-6 mb-2">
+              <label class="form-label text-secondary small fw-semibold">ด้านสัมพัธภาพเพื่อน (เต็ม 10)</label>
+              <input type="number" class="form-control" id="sdq-peer" min="0" max="10" value="3">
+            </div>
+            <div class="col-md-2.4 col-sm-6 mb-2">
+              <label class="form-label text-secondary small fw-semibold">ด้านสัมพันธภาพสังคม (เต็ม 10)</label>
+              <input type="number" class="form-control" id="sdq-social" min="0" max="10" value="8">
+            </div>
+            
+            <div class="col-12 mt-2 bg-light p-3 rounded-2">
+               <span class="text-secondary small fw-semibold"><i class="fa-solid fa-circle-info me-1"></i> เกณฑ์วิเคราะห์ความเสี่ยง SDQ:</span>
+               <p class="text-muted small mb-0">เกณฑ์คำนวณ: ด้านอารมณ์ พฤติกรรม สมาธิสั้น เพื่อน จะนับบวกรวม หากรวมได้เกิน 12 คะแนน จะวิเคราะห์จัดกลุ่มนักเรียนในเกณฑ์ <span class="badge bg-warning text-dark">เสี่ยงต่อพฤติกรรม</span> ทันทีส่วนสัมพันธภาพด้านสังคมคือเกณฑ์ผลบวกช่วย</p>
+            </div>
+
+            <div class="col-12 text-end mt-4 d-flex justify-content-between">
+               <button type="button" class="btn btn-outline-secondary btn-lg" onclick="$('#tab2-head').tab('show')"><i class="fa-solid fa-chevron-left me-1"></i> ย้อนกลับ</button>
+               <button type="button" class="btn btn-primary btn-lg" onclick="$('#tab4-head').tab('show')"><i class="fa-solid fa-chevron-right me-1"></i>หน้าถัดไป (ส่วนที่ 8 ภาพ-พิกัด)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================= SECTION 8 ภาพ-พิกัด-ลายเซ็น ======================= -->
+        <div class="tab-pane fade" id="tab4" role="tabpanel">
+          <div class="row g-3">
+             <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3">ดึงรหัส GPS ปักหมุดบ้านกูเกิล</h5>
+             <div class="col-md-8">
+               <div class="input-group">
+                 <span class="input-group-text bg-white text-secondary small">พิกัด GPS ประจำบ้าน</span>
+                 <input type="text" class="form-control" id="vis-gps" placeholder="ดึงพิกัดจากเครื่อง หรือป้อน: Lat, Long" readonly>
+                 <button class="btn btn-success" type="button" onclick="getCurrentGpsLocation()"><i class="fa-solid fa-location-crosshairs me-2"></i> ดึงพิกัด GPS ปัจจุบัน</button>
+               </div>
+             </div>
+             
+             <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">บันทึกรูปภาพกิจกรรมเยี่ยมบ้าน (คลาวด์ Google Drive)</h5>
+             
+             <!-- Image Pickers -->
+             <div class="col-md-4">
+               <label class="form-label text-secondary small fw-semibold">รูปถ่ายสภาพบ้านเรือนนักเรียน</label>
+               <div class="photo-upload-container" id="slot-house-photo">
+                 <i class="fa-solid fa-cloud-arrow-up fs-2 text-primary mb-2"></i>
+                 <span class="small text-secondary text-center px-2">คลิกเพื่ออัปโหลด รูปสภาพบ้าน</span>
+               </div>
+               <input type="hidden" id="form-house-base64">
+               <div class="text-center mt-2">
+                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearPhotoSlot('slot-house-photo', 'form-house-base64')">ล้างรูป</button>
+               </div>
+             </div>
+
+             <div class="col-md-4">
+               <label class="form-label text-secondary small fw-semibold">รูปถ่ายนักเรียนร่วมกิจกรรม</label>
+               <div class="photo-upload-container" id="slot-student-photo">
+                 <i class="fa-solid fa-cloud-arrow-up fs-2 text-primary mb-2"></i>
+                 <span class="small text-secondary text-center px-2">คลิกเพื่ออัปโหลด รูปถ่ายนักเรียน</span>
+               </div>
+               <input type="hidden" id="form-student-base64">
+               <div class="text-center mt-2">
+                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearPhotoSlot('slot-student-photo', 'form-student-base64')">ล้างรูป</button>
+               </div>
+             </div>
+
+             <div class="col-md-4">
+               <label class="form-label text-secondary small fw-semibold">รูปถ่ายประกอบการสัมภาษณ์ร่วมผู้ปกครอง</label>
+               <div class="photo-upload-container" id="slot-visit-photo">
+                 <i class="fa-solid fa-cloud-arrow-up fs-2 text-primary mb-2"></i>
+                 <span class="small text-secondary text-center px-2">คลิกเพื่ออัปโหลด รูปเยี่ยมบ้าน</span>
+               </div>
+               <input type="hidden" id="form-visit-base64">
+               <div class="text-center mt-2">
+                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearPhotoSlot('slot-visit-photo', 'form-visit-base64')">ล้างรูป</button>
+               </div>
+             </div>
+
+             <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">ระบุลายเซ็นเขียนหน้าจอ (Electronic Signature)</h5>
+             <div class="col-md-6 mb-3">
+               <label class="form-label text-secondary small fw-semibold">ลายมือชื่อคุณครูผู้เข้าเยี่ยม</label>
+               <canvas id="canvas-teacher-sig" class="signature-pad"></canvas>
+               <input type="hidden" id="form-teacher-sig-base64">
+               <div class="text-end mt-2">
+                 <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSignature('canvas-teacher-sig')">เขียนใหม่</button>
+               </div>
+             </div>
+
+             <div class="col-md-6 mb-3">
+               <label class="form-label text-secondary small fw-semibold">ลายมือชื่อผู้ปกครองนักเรียน</label>
+               <canvas id="canvas-parent-sig" class="signature-pad"></canvas>
+               <input type="hidden" id="form-parent-sig-base64">
+               <div class="text-end mt-2">
+                 <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSignature('canvas-parent-sig')">เขียนใหม่</button>
+               </div>
+             </div>
+
+             <h5 class="fw-bold text-primary border-start border-4 border-primary ps-2 mb-3 mt-4">สรุปและจำแนกเกณฑ์ประเมินการช่วยเหลือ</h5>
+             <div class="col-md-6 mb-2">
+               <label class="form-label text-secondary small fw-semibold">สรุปปัญหา / ข้อวิเคราะห์สภาวะแวดล้อมที่จำเป็นต้องแก้ไข</label>
+               <textarea class="form-control" id="vis-summary" rows="3" placeholder="ระบุผลสัมภาษณ์หรือวิกฤติในครัวเรือน (ความต้องการความช่วยเหลือ)"></textarea>
+             </div>
+             <div class="col-md-6 mb-2">
+               <label class="form-label text-secondary small fw-semibold">ข้อเสนอแนะคุณครู / แผนการติดตามและเยียวยาวิชาแนะแนว</label>
+               <textarea class="form-control" id="vis-suggestion" rows="3" placeholder="ระบุการช่วยเหลือเบื้องต้น หรือประสานต่อฝ่ายปกครองเพื่อดำเนินการทุนพัฒนา"></textarea>
+             </div>
+
+             <div class="col-md-6 mb-2">
+               <label class="form-label text-secondary small fw-semibold mt-3">ผลวิเคราะห์เกณฑ์ระดับความเสี่ยงทางการศึกษา</label>
+               <select class="form-select bg-danger-subtle text-danger-emphasis fw-bold" id="vis-risklevel">
+                 <option value="ปกติ">ปกติ (ไม่มีสัญญานตกต่ำ)</option>
+                 <option value="เสี่ยง">เสี่ยง (ปัญหาความอบอุ่น/การศึกษาล้มเหลว)</option>
+                 <option value="มีปัญหา">มีปัญหา (เศรษฐกิจขั้นรุนแรง/ขาดสัญญานน้ำ-ไฟ)</option>
+                 <option value="เร่งด่วน">เร่งด่วน (พฤติกรรมใช้สารเสพติด/ความรุนแรงในบ้าน)</option>
+               </select>
+             </div>
+
+             <div class="col-12 text-end mt-5 d-flex justify-content-between">
+               <button type="button" class="btn btn-outline-secondary btn-lg" onclick="$('#tab3-head').tab('show')"><i class="fa-solid fa-chevron-left me-1"></i> ย้อนกลับ</button>
+               <button type="submit" class="btn btn-success btn-lg"><i class="fa-solid fa-circle-check me-2"></i> บันทึกข้อมูลแบบฟอร์ม บร.01</button>
+             </div>
+          </div>
+        </div>
+        
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    // Bind base64 converters for photo upload components
+    bindPhotoUploader("slot-house-photo", "form-house-base64");
+    bindPhotoUploader("slot-student-photo", "form-student-base64");
+    bindPhotoUploader("slot-visit-photo", "form-visit-base64");
+
+    // Initialize signature drawing frames
+    setupSignaturePad("canvas-teacher-sig");
+    setupSignaturePad("canvas-parent-sig");
+
+    $("#form-homevisit").on("submit", async function(e) {
+      e.preventDefault();
+      
+      // Complete signature gathering
+      let teacherSig = getSignatureBase64("canvas-teacher-sig");
+      let parentSig = getSignatureBase64("canvas-parent-sig");
+      
+      let payload = {
+        StudentID: $("#vis-studentid").val(),
+        StudentCode: $("#vis-studentcode").val(),
+        TeacherID: currentUser ? currentUser.teacherId : "T001",
+        VisitDate: $("#vis-date").val() || new Date().toISOString().substring(0, 10),
+        VisitRound: $("#vis-round").val(),
+        Latitude: $("#vis-gps").val().split(",")[0] || "",
+        Longitude: $("#vis-gps").val().split(",")[1] || "",
+        GPS: $("#vis-gps").val(),
+        HousePhoto: $("#form-house-base64").val() || "",
+        FamilyPhoto: $("#form-student-base64").val() || "",
+        VisitPhoto: $("#form-visit-base64").val() || "",
+        TeacherSignature: teacherSig,
+        ParentSignature: parentSig,
+        Summary: $("#vis-summary").val(),
+        Suggestion: $("#vis-suggestion").val(),
+        RiskLevel: $("#vis-risklevel").val(),
+      };
+
+      $("#loading-screen").fadeIn(200);
+      try {
+        let res = await runBackend("submitHomeVisit", payload);
+        $("#loading-screen").fadeOut(200);
+        if (res.success) {
+           Swal.fire("บันทึกเยี่ยมบ้านสำเร็จ", res.message, "success")
+             .then(() => {
+                window.location.hash = "#student";
+             });
+        } else {
+           Swal.fire("ผิดพลาดในการบันทึก", res.message, "error");
+        }
+      } catch (err) {
+         $("#loading-screen").fadeOut(200);
+         Swal.fire("ข้อผิดพลาด", err.message, "error");
+      }
+    });
+  });
+
+  // Pull active student from checklist on hash redirect
+  $(window).on('hashchange', function() {
+    if (window.location.hash === "#homevisit") {
+      let activeStud = JSON.parse(localStorage.getItem("target_visit_student"));
+      if (activeStud) {
+        $("#vis-studentid").val(activeStud.StudentID);
+        $("#vis-studentcode").val(activeStud.StudentCode);
+        $("#vis-studentname").val(`${activeStud.Prefix}${activeStud.FirstName} ${activeStud.LastName}`);
+        $("#vis-classroom").val(activeStud.Classroom);
+        $("#vis-number").val(activeStud.Number || "-");
+        $("#vis-age").val(activeStud.Age || "-");
+        $("#vis-parentname").val(activeStud.ParentName || "");
+        $("#vis-parentphone").val(activeStud.ParentPhone || "");
+        
+        // Reset canvasses
+        clearSignature("canvas-teacher-sig");
+        clearSignature("canvas-parent-sig");
+        
+        // Default date picker
+        $("#vis-date").val(new Date().toISOString().substring(0, 10));
+      }
+    }
+  });
+
+  function getCurrentGpsLocation() {
+    if (navigator.geolocation) {
+       showToast("กำลังปักความเที่ยงตรงทางคาร์บอน...", "info");
+       navigator.geolocation.getCurrentPosition(function(position) {
+          let coords = `${position.coords.latitude},${position.coords.longitude}`;
+          $("#vis-gps").val(coords);
+          showToast("ระบุพิกัดสำเร็จ: " + coords, "success");
+       }, function(error) {
+          showToast("ไม่สามารถเรียกสิทธิ์ดึงพิกัด GPS ได้", "warning");
+          // Generate fallback random coordinates mock closely matching general city
+          $("#vis-gps").val("13.7563,100.5018");
+       });
+    } else {
+       showToast("บราวเซอร์ของคุณไม่เอื้ออำนวยบริการดึงพิกัด", "warning");
+    }
+  }
+</script>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title><?= systemName ?></title>
+  <base target="_top">
+  <!-- CSS Library and Custom Styles Inclusions -->
+  <?!= include('css'); ?>
+</head>
+<body>
+
+  <!-- Pulsar Loading Screen Initializer -->
+  <div id="loading-screen">
+    <div class="spinner-pulsar mb-4"></div>
+    <h3 class="fw-bold mb-2">Smart Home Visit System</h3>
+    <p class="text-secondary">กำลังเชื่อมต่อกับระบบฐานข้อมูลโรงเรียนออนไลน์ บร.01...</p>
+  </div>
+
+  <!-- Header Navigation Bar -->
+  <?!= include('navbar'); ?>
+
+  <!-- Core App Main Layout -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar Panel Navigation -->
+      <?!= include('sidebar'); ?>
+
+      <!-- Center Main Dynamic Viewports -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 min-vh-100">
+        
+        <!-- ================= LANDING SUBPAGE ================= -->
+        <div id="page-landing" class="subpage animate-fade">
+          <div class="p-5 mb-4 rounded-3 glass-card mt-3">
+            <div class="container-fluid py-5 text-center">
+              <img src="https://cdn-icons-png.flaticon.com/512/2201/2201501.png" alt="School Icon" width="120" class="mb-4">
+              <h1 class="display-5 fw-bold text-primary"><?= systemName ?></h1>
+              <h3 class="text-secondary"><?= schoolName ?></h3>
+              <p class="col-md-8 mx-auto fs-5 text-muted mt-3">
+                ระบบดูแลช่วยเหลือนักเรียน พัฒนาการบันทึกเยี่ยมบ้าน บร.01 แบบอัจฉริยะแบบเรียลไทม์ 
+                รองรับพิกัดจีพีเอส เก็บรูปภาพระบบคลาวด์ ตรวจสอบประวัตินักเรียนและวิเคราะห์ระดับสภาวะแวดล้อมสตรีมมิ่งผ่านมือถือและแท็บเล็ต
+              </p>
+              
+              <div class="d-flex justify-content-center gap-3 mt-4 guest-area">
+                <a href="#login" class="btn btn-primary btn-lg px-4"><i class="fa-solid fa-right-to-bracket me-2"></i>เข้าสู่ระบบ</a>
+                <a href="#register" class="btn btn-outline-secondary btn-lg px-4"><i class="fa-solid fa-user-plus me-2"></i>ครูลงทะเบียนใหม่</a>
+              </div>
+              
+              <div class="d-flex justify-content-center gap-3 mt-4 authorized-area d-none">
+                <a href="#dashboard" class="btn btn-success btn-lg px-4"><i class="fa-solid fa-chart-line me-2"></i>เข้าสู่หน้า Dashboard</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row g-4 mt-2">
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center h-100">
+                <div class="rounded-circle bg-primary-subtle p-3 mx-auto mb-3" style="width:70px; height:70px; display:flex; align-items:center; justify-content:center;">
+                  <i class="fa-solid fa-file-invoice-dollar fs-3 text-primary"></i>
+                </div>
+                <h5>รวดเร็ว สดใหม่ (บร.01)</h5>
+                <p class="text-secondary text-sm">บันทึกพฤติกรรม คะแนน SDQ ประเมินเกณฑ์ความเสี่ยงและแนวทางช่วยเหลือของนักเรียนผ่านแบบฟอร์มสัมผัสหน้าจอง่ายใน 8 หมวด</p>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center h-100">
+                <div class="rounded-circle bg-success-subtle p-3 mx-auto mb-3" style="width:70px; height:70px; display:flex; align-items:center; justify-content:center;">
+                  <i class="fa-solid fa-map-location-dot fs-3 text-success"></i>
+                </div>
+                <h5>พิกัด Map GPS & Camera</h5>
+                <p class="text-secondary text-sm">ดึงพิกัดแผนที่ละติจูด-ลองจิจูดอัตโนมัติ พร้อมอัปโหลดรูปแบบถ่าย สภาพบ้านเรือน บล็อกแผนที่แบบฟอร์ม บลูทูธอย่างง่ายดาย</p>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="glass-card p-4 text-center h-100">
+                <div class="rounded-circle bg-warning-subtle p-3 mx-auto mb-3" style="width:70px; height:70px; display:flex; align-items:center; justify-content:center;">
+                  <i class="fa-solid fa-signature fs-3 text-warning"></i>
+                </div>
+                <h5>รองรับลายเซ็นเขียนหน้าจอ</h5>
+                <p class="text-secondary text-sm">เซ็นรับรองโดยผู้ดูแลครูกระทำสัมผัสร่วมกับผู้ปกครองบันทึกผลเข้าระยะยาว ป้อนชื่อและแผนงานได้ทันที</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SUBPAGE BINDINGS ================= -->
+        <div id="page-login" class="subpage d-none"><?!= include('login'); ?></div>
+        <div id="page-register" class="subpage d-none"><?!= include('register'); ?></div>
+        <div id="page-dashboard" class="subpage d-none"><?!= include('dashboard'); ?></div>
+        <div id="page-student" class="subpage d-none"><?!= include('student'); ?></div>
+        <div id="page-teacher" class="subpage d-none"><?!= include('teacher'); ?></div>
+        <div id="page-homevisit" class="subpage d-none"><?!= include('homevisit'); ?></div>
+        <div id="page-report" class="subpage d-none"><?!= include('report'); ?></div>
+        <div id="page-settings" class="subpage d-none"><?!= include('settings'); ?></div>
+        <div id="page-profile" class="subpage d-none"><?!= include('profile'); ?></div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared Application Footer -->
+  <?!= include('footer'); ?>
+
+  <!-- Shared Modal Collection -->
+  <?!= include('modal'); ?>
+
+  <!-- Core Javascript Engines Inclusions -->
+  <?!= include('javascript'); ?>
+  
+</body>
+</html>

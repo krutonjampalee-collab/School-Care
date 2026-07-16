@@ -1,0 +1,88 @@
+<!-- Navigation Sidebar (sidebar.html) -->
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse d-print-none authorized-area d-none">
+  <div class="position-sticky pt-3">
+    
+    <!-- User Avatar In-Panel -->
+    <div class="text-center px-3 mb-4 border-bottom pb-4">
+      <img id="sidebar-disp-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" class="rounded-circle mb-2" width="60" height="60" style="object-fit:cover;">
+      <h6 class="text-white fw-bold mb-0 small" id="sidebar-profile-name">อาจารย์ผู้เข้าเยี่ยม</h5>
+      <span class="badge bg-secondary text-dark mt-1" style="font-size:10px;" id="sidebar-profile-role">ครูที่ปรึกษา</span>
+    </div>
+
+    <!-- Main Navigation Links -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="#dashboard" id="nav-dashboard">
+          <i class="fa-solid fa-chart-line"></i> Dashboard สถิติ
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#student" id="nav-student">
+          <i class="fa-solid fa-graduation-cap"></i> ข้อมูลนักเรียน
+        </a>
+      </li>
+      <li class="nav-item admin-only">
+        <a class="nav-link" href="#teacher" id="nav-teacher">
+          <i class="fa-solid fa-chalkboard-user"></i> ทะเบียนบุคลากรครู
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#report" id="nav-report">
+          <i class="fa-solid fa-file-invoice"></i> สารสนเทศและรายงาน
+        </a>
+      </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted text-uppercase small" style="font-size: 11px;">
+      <span>บัญชีผู้ใช้งาน</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item">
+        <a class="nav-link" href="#profile" id="nav-profile">
+          <i class="fa-solid fa-user-gear"></i> โปรไฟล์ของฉัน
+        </a>
+      </li>
+      <li class="nav-item admin-only">
+        <a class="nav-link" href="#settings" id="nav-settings">
+          <i class="fa-solid fa-sliders"></i> ตั้งค่าระบบงาน
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="javascript:void(0)" onclick="logoutUser()">
+          <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบคลาวด์
+        </a>
+      </li>
+    </ul>
+    
+  </div>
+</nav>
+
+<script>
+  // Highlight active sidebar navigation based on change hashes
+  $(window).on('hashchange', function() {
+    let hash = window.location.hash || '#landing';
+    $(".sidebar .nav-link").removeClass("active");
+    let targetId = "nav-" + hash.replace("#", "");
+    if ($("#" + targetId).length) {
+       $("#" + targetId).addClass("active");
+    }
+  });
+
+  function logoutUser() {
+    Swal.fire({
+      title: 'ต้องการออกจากระบบหรือไม่?',
+      text: "คุณจะต้องล็อกอินเข้าบัญชีวิชาแนะแนวใหม่อีกครั้งสำหรับการยืนยันสิทธิ์ข้อมูลความปลอดภัย",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'ออกจากระบบ',
+      cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+       if (result.isConfirmed) {
+         localStorage.removeItem("visit_user");
+         currentUser = null;
+         showToast("ออกจากระบบลงชื่อสำเร็จ", "info");
+         window.location.hash = "#landing";
+       }
+    });
+  }
+</script>

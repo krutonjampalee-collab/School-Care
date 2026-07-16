@@ -1,0 +1,165 @@
+<!-- Settings View (settings.html) -->
+<div class="authorized-area admin-only d-none mt-1">
+  <div class="glass-card p-4">
+    <h4 class="fw-bold text-dark border-bottom pb-3mb-4"><i class="fa-solid fa-screwdriver-wrench me-2 text-primary"></i> ตั้งค่าระบบและอัตลักษณ์โรงเรียน</h4>
+    
+    <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" id="school-tab" data-bs-toggle="tab" data-bs-target="#school-set" type="button">ข้อมูลทั่วไปสถาบัน</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="theme-tab" data-bs-toggle="tab" data-bs-target="#theme-set" type="button">ธีมสีและสัญลักษณ์ระบบ</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="settingsTabsContent">
+      <!-- School Settings -->
+      <div class="tab-pane fade show active" id="school-set" role="tabpanel">
+        <form id="form-school-settings">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-secondary small fw-semibold">ชื่อโรงเรียนอย่างเป็นทางการ</label>
+              <input type="text" class="form-control" id="set-schoolname" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">รหัสโรงเรียน 8 หลัก</label>
+              <input type="text" class="form-control" id="set-schoolcode" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ชื่อผู้อำนวยการโรงเรียน</label>
+              <input type="text" class="form-control" id="set-director" required>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ปีการศึกษาที่ดำเนินการ</label>
+              <input type="text" class="form-control" id="set-year" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">ภาคเรียนปัจจุบัน</label>
+              <select class="form-select" id="set-semester">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">เบอร์โทรศัพท์สถาบัน</label>
+              <input type="tel" class="form-control" id="set-phone">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary small fw-semibold">อีเมลติดต่อฝ่ายปกครอง</label>
+              <input type="email" class="form-control" id="set-email">
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label text-secondary small fw-semibold">ที่ตั้งโรงเรียนจริง</label>
+              <textarea class="form-control" id="set-address" rows="2"></textarea>
+            </div>
+
+            <div class="col-12 text-end mt-4">
+              <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-floppy-disk me-2"></i> บันทึกข้อมูลตั้งค่าสถาบัน</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Theme settings -->
+      <div class="tab-pane fade" id="theme-set" role="tabpanel">
+        <form id="form-theme-settings">
+          <div class="row g-3 text-sm">
+            <div class="col-md-6">
+              <label class="form-label text-secondary small fw-semibold">สีหลักรหัสองค์กร (Primary Color Hex)</label>
+              <input type="color" class="form-control form-control-color w-100" id="set-primarycolor" value="#1a73e8">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small fw-semibold">สีรองรหัสระดับวิจัย (Secondary Color Hex)</label>
+              <input type="color" class="form-control form-control-color w-100" id="set-secondarycolor" value="#34a853">
+            </div>
+            
+            <div class="col-md-12 mt-3">
+              <label class="form-label text-secondary small fw-semibold">ลิงก์ภาพสัญลักษณ์โลโก้โรงเรียนหลัก (Logo URL Link)</label>
+              <input type="url" class="form-control" id="set-logourl" placeholder="https://domain.com/logo.png">
+            </div>
+
+            <div class="col-md-12 mt-3">
+              <label class="form-label text-secondary small fw-semibold">ข้อความประชาสัมพันธ์ในส่วน Footer (Footer Text)</label>
+              <input type="text" class="form-control" id="set-footertext" placeholder="ระบุสังกัด และที่ตั้ง หรือชื่อผู้พิทักษ์ความปลอดภัยระบบ">
+            </div>
+
+            <div class="col-12 text-end mt-4">
+              <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-circle-check me-2"></i> บันทึกข้อมูลอัตลักษณ์</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function loadGeneralSettings() {
+    try {
+      let res = await runBackend("getSystemSettings");
+      if (res.success) {
+        let sc = res.schoolConfig;
+        let th = res.themeSettings;
+        
+        $("#set-schoolname").val(sc.SchoolName || CONFIG.SCHOOL_NAME);
+        $("#set-schoolcode").val(sc.SchoolCode || "");
+        $("#set-director").val(sc.DirectorName || "");
+        $("#set-year").val(sc.AcademicYear || CONFIG.ACADEMIC_YEAR);
+        $("#set-semester").val(sc.Semester || CONFIG.SEMESTER);
+        $("#set-phone").val(sc.Phone || "");
+        $("#set-email").val(sc.Email || "");
+        $("#set-address").val(sc.Address || "");
+
+        $("#set-primarycolor").val(th.PrimaryColor || "#1a73e8");
+        $("#set-secondarycolor").val(th.SecondaryColor || "#34a853");
+        $("#set-logourl").val(th.LogoURL || "https://cdn-icons-png.flaticon.com/512/2201/2201501.png");
+        $("#set-footertext").val(th.FooterText || "ฝ่ายแนะแนวและประเมินผลระบบ บร.01");
+      }
+    } catch(err) {
+      showToast("ระบบขัดข้องในการโหลดโครงสร้าง: " + err.message, "error");
+    }
+  }
+
+  $(document).ready(function() {
+    $("#form-school-settings").on("submit", async function(e) {
+      e.preventDefault();
+      let payload = {
+        SchoolCode: $("#set-schoolcode").val(),
+        DirectorName: $("#set-director").val(),
+        AcademicYear: $("#set-year").val(),
+        Semester: $("#set-semester").val(),
+        Phone: $("#set-phone").val(),
+        Email: $("#set-email").val(),
+        Address: $("#set-address").val()
+      };
+      
+      $("#loading-screen").fadeIn(200);
+      let res = await runBackend("updateSchoolSettings", payload);
+      $("#loading-screen").fadeOut(200);
+      if (res.success) {
+         showToast(res.message, "success");
+         loadGeneralSettings();
+      }
+    });
+
+    $("#form-theme-settings").on("submit", async function(e1) {
+      e1.preventDefault();
+      let payload = {
+        PrimaryColor: $("#set-primarycolor").val(),
+        SecondaryColor: $("#set-secondarycolor").val(),
+        LogoURL: $("#set-logourl").val(),
+        FooterText: $("#set-footertext").val()
+      };
+      
+      $("#loading-screen").fadeIn(200);
+      let res = await runBackend("updateThemeSettings", payload);
+      $("#loading-screen").fadeOut(200);
+      if (res.success) {
+         showToast(res.message, "success");
+         loadGeneralSettings();
+      }
+    });
+  });
+</script>

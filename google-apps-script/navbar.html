@@ -1,0 +1,57 @@
+<!-- App Navigation Bar (navbar.html) -->
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow d-print-none">
+  
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 d-flex align-items-center gap-2" href="#landing">
+    <img src="https://cdn-icons-png.flaticon.com/512/2201/2201501.png" alt="Logo" width="28">
+    <span class="fw-bold tracking-tight">Smart Visit (บร.01)</span>
+  </a>
+  
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" style="right:15px; top:8px;">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <div class="w-100"></div>
+  
+  <div class="navbar-nav flex-row align-items-center gap-3 px-3">
+    <!-- Theme Toggle -->
+    <div class="nav-item">
+      <button class="btn btn-link text-white-50 p-2 nav-link" onclick="toggleTheme()" title="เปลี่ยนธีมหน้าต่าง">
+        <i class="fa-solid fa-moon text-light" id="theme-icon"></i>
+      </button>
+    </div>
+    
+    <!-- Notification Center -->
+    <div class="nav-item dropdown authorized-area d-none">
+      <button class="btn btn-link text-white-50 p-2 nav-link position-relative" id="notifyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-regular fa-bell text-light"></i>
+        <span class="position-absolute top-2 start-4 translate-middle p-1 bg-danger border border-light rounded-circle" id="notify-indicator"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2" aria-labelledby="notifyDropdown" style="width: 300px; border-radius:12px;">
+        <h6 class="dropdown-header fw-bold border-bottom pb-2">ศูนย์การแจ้งเตือนเสี่ยง</h6>
+        <div id="notify-list" class="py-1">
+          <li class="p-2 small text-muted text-center">ไม่มีการแจ้งเตือนใหม่ในระบบหลัก</li>
+        </div>
+      </ul>
+    </div>
+
+    <!-- User Dropdown Menu -->
+    <div class="nav-item dropdown authorized-area d-none">
+      <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-regular fa-circle-user fs-5 text-light me-1"></i>
+        <!-- Logged user status filled here dynamic -->
+        <strong id="logged-username" class="text-sm">ผู้ใช้งาน</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="navbarDropdown" style="border-radius:12px;">
+        <li><a class="dropdown-item small" href="#profile"><i class="fa-solid fa-user-gear me-2 text-secondary"></i>ประวัติส่วนตัว</a></li>
+        <li class="admin-only"><a class="dropdown-item small" href="#settings"><i class="fa-solid fa-sliders me-2 text-secondary"></i>ตั้งค่าสถาบัน</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger small" href="javascript:void(0)" onclick="logoutUser()"><i class="fa-solid fa-right-from-bracket me-2"></i>ออกจากระบบ</a></li>
+      </ul>
+    </div>
+
+    <!-- Login shortcuts for guest -->
+    <div class="nav-item guest-area">
+      <a class="btn btn-sm btn-outline-light px-3 fw-bold" href="#login" style="border-radius:6px;">เข้าสู่ระบบ</a>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,354 @@
+<!-- Modal Collections (modal.html) -->
+
+<!-- ================= STUDENT MODAL ================= -->
+<div class="modal fade" id="modalStudent" tabindex="-1" aria-labelledby="modalStudentTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0" style="border-radius: 16px;">
+      <div class="modal-header border-bottom pb-2">
+        <h5 class="modal-title fw-bold" id="modalStudentTitle">เพิ่มข้อมูลนักเรียนคนใหม่</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="form-student">
+        <div class="modal-body py-3 text-sm">
+          <input type="hidden" id="form-student-id">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">รหัสประจำตัวนักเรียน</label>
+              <input type="text" class="form-control" id="form-student-code" required placeholder="ระบุรหัส 5 หลัก">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">เลขบัตรประจำตัวประชาชน</label>
+              <input type="text" class="form-control" id="form-student-citizen" required placeholder="ป้อนตัวเลข 13 หลัก" minlength="13" maxlength="13">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">คำนำหน้าชื่อ</label>
+              <select class="form-select" id="form-student-prefix">
+                <option value="เด็กชาย">เด็กชาย</option>
+                <option value="เด็กหญิง">เด็กหญิง</option>
+                <option value="นาย">นาย</option>
+                <option value="นางสาว">นางสาว</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">ชื่อจริงนักเรียน</label>
+              <input type="text" class="form-control" id="form-student-first" required placeholder="ภาษาไทย ไม่ต้องป้อนคำนำหน้า">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">นามสกุลจริง</label>
+              <input type="text" class="form-control" id="form-student-last" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">เพศกำเนิด</label>
+              <select class="form-select" id="form-student-gender">
+                <option value="ชาย">ชาย</option>
+                <option value="หญิง">หญิง</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label text-secondary fw-semibold mb-1">วัน/เดือน/ปี เกิด</label>
+              <input type="date" class="form-control" id="form-student-birth" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label text-secondary fw-semibold mb-1">อายุ ณ วันเปิดเรียน</label>
+              <input type="number" class="form-control" id="form-student-age" required value="13">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary fw-semibold mb-1">ระดับชั้นศึกษา</label>
+              <select class="form-select" id="form-student-grade">
+                <option value="มัธยมศึกษาปีที่ 1">มัธยมศึกษาปีที่ 1</option>
+                <option value="มัธยมศึกษาปีที่ 2">มัธยมศึกษาปีที่ 2</option>
+                <option value="มัธยมศึกษาปีที่ 3">มัธยมศึกษาปีที่ 3</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-secondary fw-semibold mb-1">ห้องเรียน</label>
+              <select class="form-select" id="form-student-classroom">
+                <option value="ม.1/1">ม.1/1</option>
+                <option value="ม.1/2">ม.1/2</option>
+                <option value="ม.2/1">ม.2/1</option>
+                <option value="ม.2/2">ม.2/2</option>
+                <option value="ม.3/1">ม.3/1</option>
+                <option value="ม.3/2">ม.3/2</option>
+              </select>
+            </div>
+            
+            <div class="col-md-2">
+              <label class="form-label text-secondary fw-semibold mb-1">ลำดับเลขที่</label>
+              <input type="number" class="form-control" id="form-student-number" value="1">
+            </div>
+            <div class="col-md-5">
+              <label class="form-label text-secondary fw-semibold mb-1">ชื่อผู้ปกครองหลัก</label>
+              <input type="text" class="form-control" id="form-student-parent" required>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label text-secondary fw-semibold mb-1">เบอร์ติดต่อกรณีเร่งด่วน</label>
+              <input type="tel" class="form-control" id="form-student-parentphone" required placeholder="08x-xxxxxxx">
+            </div>
+
+            <div class="col-md-12">
+               <label class="form-label text-secondary fw-semibold mb-1">ที่อยู่อาศัยตามทะเบียนบ้าน</label>
+               <textarea class="form-control" id="form-student-address" rows="1.5"></textarea>
+            </div>
+            
+            <div class="col-md-12">
+               <label class="form-label text-secondary fw-semibold mb-1">รูปถ่ายติดกระดาน (อัปคลาวด์)</label>
+               <div class="photo-upload-container" id="preview-student-photo" style="height: 100px;">
+                 <i class="fa-solid fa-cloud-arrow-up fs-4 text-primary"></i>
+                 <span class="small text-secondary">คลิกเพื่ออัปโหลด รูปถือติดบัตร</span>
+               </div>
+               <input type="hidden" id="form-student-photourl">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-top pt-2">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i> บันทึกข้อมูลนักเรียน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TEACHER MODAL ================= -->
+<div class="modal fade" id="modalTeacher" tabindex="-1" aria-labelledby="modalTeacherTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0" style="border-radius: 16px;">
+      <div class="modal-header border-bottom pb-2">
+        <h5 class="modal-title fw-bold" id="modalTeacherTitle">เพิ่มประวัติบุคลากรครู</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="form-teacher">
+        <div class="modal-body py-3 text-sm">
+          <input type="hidden" id="form-teacher-id">
+          <div class="row g-3">
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">รหัสประจำตัวครู 5 หลัก</label>
+              <input type="text" class="form-control" id="form-teacher-code" required placeholder="เช่น 24322">
+            </div>
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">คำนำหน้าหน้าชื่อ</label>
+              <select class="form-select" id="form-teacher-prefix">
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว">นางสาว</option>
+                <option value="ดร.">ดร.</option>
+              </select>
+            </div>
+
+            <div class="col-md-12 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">ชื่อจริง - นามสกุลประจำตำแหน่ง</label>
+              <input type="text" class="form-control" id="form-teacher-fullname" required>
+            </div>
+
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">ตำแหน่งทางแนะแนว</label>
+              <input type="text" class="form-control" id="form-teacher-position" required placeholder="ครูที่ปรึกษาวิชาการ">
+            </div>
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">กลุ่มสาระการเรียนรู้/ฝ่ายสังกัด</label>
+              <input type="text" class="form-control" id="form-teacher-dept" value="แนะแนวเพื่อความสมานร่วม">
+            </div>
+
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">เบอร์ติดต่อบุคลากร</label>
+              <input type="tel" class="form-control" id="form-teacher-phone">
+            </div>
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">ที่อยู่อีเมลเข้าผูก</label>
+              <input type="email" class="form-control" id="form-teacher-email" placeholder="example@school.ac.th">
+            </div>
+
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">ห้องที่ปรึกษา: ระดับ</label>
+              <select class="form-select" id="form-teacher-grade">
+                <option value="">-- ไม่สังกัดประจำชั้น --</option>
+                <option value="มัธยมศึกษาปีที่ 1">มัธยมศึกษาปีที่ 1</option>
+                <option value="มัธยมศึกษาปีที่ 2">มัธยมศึกษาปีที่ 2</option>
+                <option value="มัธยมศึกษาปีที่ 3">มัธยมศึกษาปีที่ 3</option>
+              </select>
+            </div>
+            <div class="col-md-6 text-sm">
+              <label class="form-label text-secondary fw-semibold mb-1">ห้องที่ปรึกษา: ห้องระบุ</label>
+              <select class="form-select" id="form-teacher-room">
+                <option value="">-- ไม่มีห้อง --</option>
+                <option value="ม.1/1">ม.1/1</option>
+                <option value="ม.1/2">ม.1/2</option>
+                <option value="ม.2/1">ม.2/1</option>
+                <option value="ม.2/2">ม.2/2</option>
+                <option value="ม.3/1">ม.3/1</option>
+                <option value="ม.3/2">ม.3/2</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-top pt-2">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i> บันทึกข้อมูลบุคลากร</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BULK IMPORT MODAL ================= -->
+<div class="modal fade" id="modalImport" tabindex="-1" aria-labelledby="modalImportTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0" style="border-radius: 16px;">
+      <div class="modal-header border-bottom pb-2">
+        <h5 class="modal-title fw-bold" id="modalImportTitle">นำเข้าไฟล์รายชื่อนักเรียน Bulk Excel/CSV</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <div class="mb-4 bg-light p-3 rounded-2 text-secondary small">
+           <h6><i class="fa-solid fa-circle-info text-primary me-2"></i> ข้อกำหนดหัวไฟล์การเขียน:</h5>
+           <p class="mb-1">การนำเข้าต้องประกอบด้วยหัวคอลัมน์ลำดับแรกตามโครงสร้างตาราง อาทิ:</p>
+           <code>StudentCode, CitizenID, Prefix, FirstName, LastName, Gender, Classroom, Number, ParentName, ParentPhone</code>
+        </div>
+        
+        <div class="mb-3">
+           <label class="form-label text-secondary small fw-semibold">ป้อนไฟล์ข้อมูลประเภท CSV / JSON</label>
+           <input type="file" id="bulk-import-file" class="form-control" accept=".csv, .json">
+        </div>
+      </div>
+      <div class="modal-footer border-top pt-2">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-success fw-bold" onclick="processBulkImportFile()"><i class="fa-solid fa-circle-check me-1"></i> คอนเฟิร์มการนำเข้า</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    bindPhotoUploader("preview-student-photo", "form-student-photourl");
+
+    $("#form-student").on("submit", async function(e) {
+      e.preventDefault();
+      let payload = {
+        StudentID: $("#form-student-id").val(),
+        StudentCode: $("#form-student-code").val(),
+        CitizenID: $("#form-student-citizen").val(),
+        Prefix: $("#form-student-prefix").val(),
+        FirstName: $("#form-student-first").val(),
+        LastName: $("#form-student-last").val(),
+        Gender: $("#form-student-gender").val(),
+        BirthDate: $("#form-student-birth").val(),
+        Age: $("#form-student-age").val(),
+        Grade: $("#form-student-grade").val(),
+        Classroom: $("#form-student-classroom").val(),
+        Number: $("#form-student-number").val(),
+        ParentName: $("#form-student-parent").val(),
+        ParentPhone: $("#form-student-parentphone").val(),
+        Address: $("#form-student-address").val(),
+        PhotoURL: $("#form-student-photourl").val() || "",
+        Status: "Active",
+        CreatedBy: currentUser ? currentUser.fullName : "ADMIN"
+      };
+
+      $("#loading-screen").fadeIn(200);
+      try {
+         let res = await runBackend("saveStudent", payload);
+         $("#loading-screen").fadeOut(200);
+         $("#modalStudent").modal("hide");
+         
+         if (res.success) {
+            showToast(res.message, "success");
+            loadStudentsTable(1);
+         } else {
+            Swal.fire("ข้อผิดพลาด", res.message, "warning");
+         }
+      } catch(err) {
+         $("#loading-screen").fadeOut(200);
+         showToast("จัดเก็บประวัติล้มเหลว: " + err.message, "error");
+      }
+    });
+
+    $("#form-teacher").on("submit", async function(e1) {
+      e1.preventDefault();
+      let payload = {
+        TeacherID: $("#form-teacher-id").val(),
+        TeacherCode: $("#form-teacher-code").val(),
+        Prefix: $("#form-teacher-prefix").val(),
+        FullName: $("#form-teacher-fullname").val(),
+        Position: $("#form-teacher-position").val(),
+        Department: $("#form-teacher-dept").val(),
+        Phone: $("#form-teacher-phone").val(),
+        Email: $("#form-teacher-email").val(),
+        AssignedGrade: $("#form-teacher-grade").val(),
+        AssignedRoom: $("#form-teacher-room").val()
+      };
+
+      $("#loading-screen").fadeIn(200);
+      try {
+         let res = await runBackend("saveTeacher", payload);
+         $("#loading-screen").fadeOut(200);
+         $("#modalTeacher").modal("hide");
+         
+         if (res.success) {
+            showToast(res.message, "success");
+            loadTeachersTable();
+         } else {
+            Swal.fire("ข้อผิดพลาด", res.message, "warning");
+         }
+      } catch(err) {
+         $("#loading-screen").fadeOut(200);
+         showToast("บันทึกวิทยสิทธิ์ล้มเหลว: " + err.message, "error");
+      }
+    });
+  });
+
+  function processBulkImportFile() {
+     const fileInput = document.getElementById("bulk-import-file");
+     const file = fileInput.files[0];
+     if(!file) {
+        Swal.fire("ข้อกำหนดข้อมูล", "กรุณาแนบไฟล์รูปเล่มนามสกุล CSV หรือ JSON ก่อนทำการคอนเฟิร์ม", "warning");
+        return;
+     }
+
+     const reader = new FileReader();
+     reader.onload = async function(e) {
+        let content = e.target.result;
+        let studentsArray = [];
+        
+        try {
+           if (file.name.endsWith(".json")) {
+              studentsArray = JSON.parse(content);
+           } else {
+              // Parse simple CSV helper
+              let lines = content.split("\n");
+              let headers = lines[0].split(",");
+              for(let i=1; i<lines.length; i++) {
+                 if(lines[i].trim() === "") continue;
+                 let items = lines[i].split(",");
+                 let obj = {};
+                 for(let j=0; j<headers.length; j++) {
+                    obj[headers[j].trim()] = items[j] ? items[j].trim() : "";
+                 }
+                 studentsArray.push(obj);
+              }
+           }
+
+           $("#modalImport").modal("hide");
+           $("#loading-screen").fadeIn(200);
+           
+           let syncUser = currentUser ? currentUser.fullName : "ADMIN";
+           let res = await runBackend("importStudentsBulk", studentsArray, syncUser);
+           
+           $("#loading-screen").fadeOut(200);
+           
+           if(res.success) {
+              Swal.fire("นำเข้ากลุ่มนักเรียนลุล่วง", `นำข้อมูลเข้าได้สำเร็จจำนวน ${res.count} คน (รหัสนักเรียน/บัตรซ้ำในฐานถูกข้ามไป ${res.duplicate} คน)`, "success");
+              loadStudentsTable(1);
+           } else {
+              Swal.fire("ข้อขัดข้องระหว่างบันทึก", res.message, "error");
+           }
+        } catch(evt) {
+           $("#loading-screen").fadeOut(200);
+           Swal.fire("ไม่สามารถแปลงโครงสร้างไฟล์ได้", "ตรวจสอบว่าหัวคอลัมน์ชื่อตรงตามรูปแบบที่ระบุไว้หรือไม่", "error");
+        }
+     };
+     reader.readAsText(file);
+  }
+</script>
